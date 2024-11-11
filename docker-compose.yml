@@ -1,0 +1,30 @@
+services:
+  mongo:
+    container_name: mongoDB
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=P@ssw0rd123
+      - MONGO_INITDB_DATABASE=cloudStorage
+    networks:
+      - database-network
+    volumes:
+     - mongo-data:/data/db  # Volume for persistent data
+
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - database-network
+    depends_on:
+      - mongo
+    volumes:
+      - /src:/usr/app/src
+networks:
+  database-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

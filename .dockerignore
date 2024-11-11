@@ -1,0 +1,5 @@
+.prettierrc
+.eslintrc.js
+node_modules
+Dockerfile
+docker-compose.yml
