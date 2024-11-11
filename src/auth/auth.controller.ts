@@ -1,4 +1,6 @@
-import { Controller } from '@nestjs/common';
+import {Body, Controller, Post} from '@nestjs/common';
+import {SearchUserDto} from "../dtos/searchUser.dto";
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+}

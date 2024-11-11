@@ -1,7 +1,8 @@
+version: "1.0"
 services:
   mongo:
     container_name: mongoDB
-    image: mongo
+    image: mongo:latest
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=P@ssw0rd123
@@ -9,11 +10,14 @@ services:
     networks:
       - database-network
     volumes:
-     - mongo-data:/data/db  # Volume for persistent data
+      - mongo-data:/data/db  # Volume for persistent data
 
   app:
     container_name: app
     build: .
+    environment:
+      - MONGOURI=mongodb://admin:P@ssw0rd123@mongo:27017/cloudStorage?authSource=admin
+
     ports:
       - "3000:3000"
     networks:
@@ -21,7 +25,8 @@ services:
     depends_on:
       - mongo
     volumes:
-      - /src:/usr/app/src
+      - ./src:/usr/app/src
+
 networks:
   database-network:
     driver: bridge
