@@ -7,7 +7,7 @@ import {User, UserSchema} from "./schemas/user.schema";
 
 @Module({
     imports: [UsersModule, AuthModule, MongooseModule.forRoot(process.env.MONGOURI
-    ), MongooseModule.forFeature([{name: User.name, schema: UserSchema}])],
+    )],
     providers: [AppService],
 })
 export class AppModule {

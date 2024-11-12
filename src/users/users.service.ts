@@ -1,19 +1,31 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
 import {User} from "../schemas/user.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
-import {SearchUserDto} from "../dtos/searchUser.dto";
+import {UserDto} from "../dtos/userDto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel("User") private readonly userModel: Model<User>) {
     }
 
-    async findUser(user: SearchUserDto): Promise<User> {
+    async findUser(user: UserDto): Promise<User> {
         try {
-            return await this.userModel.findOne({name: user.name, password: user.password}).exec();
+            return await this.userModel.findOne({name: user.name}).exec();
         } catch (e) {
             console.log("Error retrieving data mongoDB data with Mongoose : ", e);
         }
+    }
+
+    async createUser(user: UserDto): Promise<User> {
+        try {
+            //hash password
+            user.password = await bcrypt.hash(user.password, 10);
+        } catch (err) {
+            throw new InternalServerErrorException("Error Occurred With Bcrypt : ", err);
+        }
+
+        return await new this.userModel(user).save()
     }
 }
