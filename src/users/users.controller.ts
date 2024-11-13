@@ -1,6 +1,5 @@
 import {Body, Controller, Post, UsePipes, ValidationPipe} from '@nestjs/common';
 import {UsersService} from "./users.service";
-import {UserDto} from "../dtos/userDto";
 import {User} from "../schemas/user.schema";
 
 @Controller('users')
@@ -11,7 +10,7 @@ export class UsersController {
 
     @Post()
     @UsePipes(new ValidationPipe({transform: true, forbidNonWhitelisted: true, whitelist: true}))
-    createUser(@Body() user: UserDto): Promise<User> {
+    createUser(@Body() user: User): Promise<User> {
         return this.usersService.createUser(user)
     }
 }

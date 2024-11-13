@@ -1,6 +1,6 @@
 import {Body, Controller, Post, UsePipes, ValidationPipe} from '@nestjs/common';
-import {UserDto} from "../dtos/userDto";
 import {AuthService} from "./auth.service";
+import {UserDto} from "../dtos/UserDto";
 
 @Controller('auth')
 export class AuthController {
@@ -8,7 +8,7 @@ export class AuthController {
     }
 
     @Post()
-    @UsePipes(new ValidationPipe({transform: true, forbidNonWhitelisted: true, whitelist: true}))
+
     async login(@Body() loginDetails: UserDto): Promise<{ token: string }> {
         const token = await this.authService.login(loginDetails)
         return {token: token}

@@ -5,10 +5,10 @@ import {Document} from "mongoose";
 @Schema()
 export class User extends Document {
 
-    @Prop({unique: true})
+    @Prop({unique: true, required: true})
     name: string;
 
-    @Prop()
+    @Prop({required: true})
     password: string;
 }
 

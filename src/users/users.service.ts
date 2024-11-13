@@ -1,9 +1,9 @@
-import {BadRequestException, ConflictException, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {ConflictException, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {User} from "../schemas/user.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
-import {UserDto} from "../dtos/userDto";
 import * as bcrypt from "bcrypt";
+import {UserDto} from "../dtos/UserDto";
 
 @Injectable()
 export class UsersService {

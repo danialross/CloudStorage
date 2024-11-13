@@ -6,19 +6,22 @@ import {Document} from "mongoose";
 export class File extends Document {
 
     @Prop({required: true})
-    fileName: string
+    name: string
 
     @Prop({required: true})
-    fileType: string
+    type: string
 
     @Prop({required: true})
-    fileSize: number
+    size: number
 
     @Prop({default: Date.now()})
     createdAt: Date
 
+    @Prop({required: true, type: Buffer})
+    file: Buffer
+
     @Prop({required: true})
-    fileData: Buffer
+    owner: string
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);

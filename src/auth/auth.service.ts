@@ -1,8 +1,8 @@
 import {Injectable, InternalServerErrorException, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from "bcrypt"
 import {UsersService} from "../users/users.service";
-import {UserDto} from "../dtos/userDto";
 import {JwtService} from "@nestjs/jwt"
+import {UserDto} from "../dtos/UserDto";
 
 @Injectable()
 export class AuthService {
@@ -13,11 +13,10 @@ export class AuthService {
     }
 
     async validatePassword(loginPassword: string, userPassword: string): Promise<boolean> {
-
         try {
             return await bcrypt.compare(loginPassword, userPassword);
-        } catch (err) {
-            throw new InternalServerErrorException("Unexpected Error Occurred With Bcrypt : ", err);
+        } catch (e) {
+            throw new InternalServerErrorException("Unexpected Error Occurred With Bcrypt : ", e.message);
         }
 
     }
@@ -36,7 +35,7 @@ export class AuthService {
         }
 
         try {
-            const payload = {payload: loginDetails.name, sub: user._id}
+            const payload = {user: {name: loginDetails.name}, sub: user._id,}
             return await this.jwtService.signAsync(payload)
         } catch (e) {
             throw new InternalServerErrorException("Unexpected Error Occurred With JWT : ", e)
