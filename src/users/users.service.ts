@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {BadRequestException, ConflictException, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {User} from "../schemas/user.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
@@ -19,8 +19,13 @@ export class UsersService {
     }
 
     async createUser(user: UserDto): Promise<User> {
+        const existingUser = this.findUser(user)
+
+        if (existingUser) {
+            throw new ConflictException("User already exists");
+        }
+
         try {
-            //hash password
             user.password = await bcrypt.hash(user.password, 10);
         } catch (err) {
             throw new InternalServerErrorException("Error Occurred With Bcrypt : ", err);
