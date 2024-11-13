@@ -16,10 +16,11 @@ services:
     container_name: app
     build: .
     environment:
+      - PORT=${PORT}
       - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     networks:
       - database-network
     depends_on:

@@ -4,7 +4,8 @@ import * as process from "node:process";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+    await app.listen(process.env.PORT);
+    console.log(`Server started on port ${process.env.PORT}`);
 }
 
 bootstrap();
