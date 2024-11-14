@@ -5,12 +5,13 @@ import {JwtModule} from "@nestjs/jwt";
 import {JwtauthGuard} from "../guards/jwtauth.guard";
 import {MongooseModule} from "@nestjs/mongoose";
 import {FileSchema, File} from "../schemas/file.schema";
-import {AuthModule} from "../auth/auth.module";
+import {UsersModule} from "../users/users.module";
 
 @Module({
     imports: [
         JwtModule.register({secret: process.env.JWT_SECRET, signOptions: {expiresIn: "1h"}}),
         MongooseModule.forFeature([{name: File.name, schema: FileSchema}]),
+        UsersModule
     ],
     providers: [FilesService, JwtauthGuard],
     controllers: [FilesController]

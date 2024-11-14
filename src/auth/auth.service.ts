@@ -35,7 +35,7 @@ export class AuthService {
         }
 
         try {
-            const payload = {user: {name: loginDetails.name}, sub: user._id,}
+            const payload = {user: {name: loginDetails.name, id: user._id}, sub: user._id}
             return await this.jwtService.signAsync(payload)
         } catch (e) {
             throw new InternalServerErrorException("Unexpected Error Occurred With JWT : ", e)

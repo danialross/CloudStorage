@@ -1,21 +1,22 @@
 import {Injectable, InternalServerErrorException} from '@nestjs/common';
-import {ResponseMessage} from "./types"
+import {JwtPayload, ResponseMessage} from "./types"
 import {InjectModel} from "@nestjs/mongoose";
-import {Model, MongooseError} from "mongoose";
+import {Model} from "mongoose";
 import {File} from "../schemas/file.schema";
 import {JwtService} from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import {User} from "../schemas/user.schema";
 
 @Injectable()
 export class FilesService {
-    constructor(@InjectModel("File") private readonly fileModel: Model<File>, private readonly jwtService: JwtService) {
+
+    constructor(
+        @InjectModel("File") private readonly fileModel: Model<File>,
+        private readonly jwtService: JwtService,
+    ) {
     }
 
 
     async saveToDb(file: Express.Multer.File, token: string): Promise<ResponseMessage> {
-        let payload: any;
-        let hashedUsername: string;
+        let payload: JwtPayload;
 
         try {
             payload = await this.jwtService.decode(token)
@@ -24,18 +25,12 @@ export class FilesService {
         }
 
         try {
-            hashedUsername = await bcrypt.hash(payload.user.name, 10)
-        } catch (e) {
-            throw new InternalServerErrorException("Error Occurred With Bcrypt :", e.message)
-        }
-
-        try {
             const processedFile = {
                 name: file.originalname,
                 type: file.mimetype,
                 size: file.size,
                 file: file.buffer,
-                owner: hashedUsername,
+                owner: payload.user.id,
             }
             await new this.fileModel(processedFile).save();
         } catch (e) {
@@ -46,6 +41,14 @@ export class FilesService {
         }
 
         return {message: "Successfully uploaded"};
+    }
 
+    async getFileList(token: string): Promise<File[]> {
+        const {user}: JwtPayload = await this.jwtService.decode(token);
+        return await this.fileModel.find({owner: user.id}, "name").exec()
+    }
+
+    async getFile(index: number): Promise<File> {
+        return
     }
 }
