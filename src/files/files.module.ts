@@ -2,7 +2,7 @@ import {Module} from '@nestjs/common';
 import {FilesService} from './files.service';
 import {FilesController} from './files.controller';
 import {JwtModule} from "@nestjs/jwt";
-import {JwtauthGuard} from "../guards/jwtauth.guard";
+import {JwtValidationGuard} from "../guards/jwt-validation.guard";
 import {MongooseModule} from "@nestjs/mongoose";
 import {FileSchema, File} from "../schemas/file.schema";
 import {UsersModule} from "../users/users.module";
@@ -13,8 +13,9 @@ import {UsersModule} from "../users/users.module";
         MongooseModule.forFeature([{name: File.name, schema: FileSchema}]),
         UsersModule
     ],
-    providers: [FilesService, JwtauthGuard],
-    controllers: [FilesController]
+    providers: [FilesService, JwtValidationGuard],
+    controllers: [FilesController],
+    exports: [FilesService]
 })
 export class FilesModule {
 }

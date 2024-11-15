@@ -18,7 +18,7 @@ export class File extends Document {
     createdAt: Date
 
     @Prop({required: true, type: Buffer})
-    file: Buffer
+    data: Buffer
 
     @Prop({required: true})
     owner: string

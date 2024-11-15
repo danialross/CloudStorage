@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {JwtPayload, ResponseMessage} from "./types"
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
@@ -40,15 +40,40 @@ export class FilesService {
             throw new InternalServerErrorException("Unable To Upload File, ", e.message)
         }
 
-        return {message: "Successfully uploaded"};
+        return {message: "Successfully Uploaded"};
     }
 
     async getFileList(token: string): Promise<File[]> {
         const {user}: JwtPayload = await this.jwtService.decode(token);
-        return await this.fileModel.find({owner: user.id}, "name").exec()
+        try {
+            return await this.fileModel.find({owner: user.id}, "name").exec()
+        } catch (e) {
+            throw new InternalServerErrorException("Error Occurred When Retrieving Data, ", e.message)
+        }
     }
 
-    async getFile(index: number): Promise<File> {
-        return
+    async getFile(fileId: string, token: string,): Promise<File> {
+        let file: File;
+        try {
+            file = await this.fileModel.findOne({_id: fileId}).exec()
+        } catch (e) {
+            console.log("fail in service 1")
+
+            throw new InternalServerErrorException("Error Occurred When Retrieving Data, ", e.message)
+        }
+
+        if (!file) {
+            throw new NotFoundException("File Does Not exist")
+        }
+
+        const {id: userId} = await this.jwtService.decode(token).user
+
+        if (file.owner !== userId) {
+            console.log("fail in service 2")
+
+            throw new UnauthorizedException("Does Not Have Access to File")
+        }
+        console.log(file.data)
+        return file
     }
 }

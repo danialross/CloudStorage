@@ -18,7 +18,6 @@ export class AuthService {
         } catch (e) {
             throw new InternalServerErrorException("Unexpected Error Occurred With Bcrypt : ", e.message);
         }
-
     }
 
     async login(loginDetails: UserDto): Promise<string> {
