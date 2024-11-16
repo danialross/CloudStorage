@@ -8,16 +8,16 @@ import { File, FileSchema } from '../schemas/file.schema';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-	imports: [
-		JwtModule.register({
-			secret: process.env.JWT_SECRET,
-			signOptions: { expiresIn: '1h' },
-		}),
-		MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
-		UsersModule,
-	],
-	providers: [FilesService, JwtValidationGuard],
-	controllers: [FilesController],
-	exports: [FilesService],
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+    MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
+    UsersModule,
+  ],
+  providers: [FilesService, JwtValidationGuard],
+  controllers: [FilesController],
+  exports: [FilesService],
 })
 export class FilesModule {}

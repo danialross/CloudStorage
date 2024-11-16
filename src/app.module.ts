@@ -5,11 +5,11 @@ import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
 
 @Module({
-	imports: [
-		UsersModule,
-		FilesModule,
-		AuthModule,
-		MongooseModule.forRoot(process.env.MONGOURI),
-	],
+  imports: [
+    UsersModule,
+    FilesModule,
+    AuthModule,
+    MongooseModule.forRoot(process.env.MONGOURI),
+  ],
 })
 export class AppModule {}
