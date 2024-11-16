@@ -1,10 +1,10 @@
 export type ResponseMessage = {
-    message: string
-}
+	message: string;
+};
 
 export type JwtPayload = {
-    user: { name: string, id: string },
-    sub: string,
-    iat: number,
-    exp: number
-}
+	user: { name: string; id: string };
+	sub: string;
+	iat: number;
+	exp: number;
+};
