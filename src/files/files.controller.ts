@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Headers,
   InternalServerErrorException,
@@ -60,9 +61,18 @@ export class FilesController {
   ) {
     const token = authHeader.split(' ')[1];
     const file: File = await this.fileService.getFile(fileId, token);
-    // console.log(file.data.toString('base64'))
     res.setHeader('Content-Type', file.type);
     res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
     res.send(file.data);
+  }
+
+  @Delete(':fileId')
+  @UseGuards(JwtValidationGuard)
+  async deleteFile(
+    @Param('fileId') fileId: string,
+    @Headers('authorization') authHeader: string,
+  ): Promise<ResponseMessage> {
+    const token = authHeader.split(' ')[1];
+    return await this.fileService.deleteFile(fileId, token);
   }
 }

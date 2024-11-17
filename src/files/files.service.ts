@@ -45,7 +45,7 @@ export class FilesService {
       throw new InternalServerErrorException(e);
     }
 
-    return { message: 'Successfully Uploaded' };
+    return { message: 'File Successfully Uploaded' };
   }
 
   async getFileList(token: string): Promise<File[]> {
@@ -81,5 +81,12 @@ export class FilesService {
       throw new UnauthorizedException('Does Not Have Access to File');
     }
     return file;
+  }
+
+  async deleteFile(fileId: string, token: string): Promise<ResponseMessage> {
+    //check if file exists and belongs to requester
+    await this.getFile(fileId, token);
+    await this.fileModel.deleteOne({ _id: fileId }).exec();
+    return { message: 'File Successfully Deleted' };
   }
 }
