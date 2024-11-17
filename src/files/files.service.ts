@@ -28,7 +28,7 @@ export class FilesService {
     } catch (e) {
       throw new InternalServerErrorException(
         'Unable To Retrieve JWT Payload, ',
-        e.message,
+        e,
       );
     }
 
@@ -37,21 +37,12 @@ export class FilesService {
         name: file.originalname,
         type: file.mimetype,
         size: file.size,
-        file: file.buffer,
+        data: file.buffer,
         owner: payload.user.id,
       };
       await new this.fileModel(processedFile).save();
     } catch (e) {
-      if (e.name === 'ValidationError') {
-        throw new InternalServerErrorException(
-          'Mongoose Validation Failed , ',
-          e.message,
-        );
-      }
-      throw new InternalServerErrorException(
-        'Unable To Upload File, ',
-        e.message,
-      );
+      throw new InternalServerErrorException(e);
     }
 
     return { message: 'Successfully Uploaded' };
@@ -64,7 +55,7 @@ export class FilesService {
     } catch (e) {
       throw new InternalServerErrorException(
         'Error Occurred When Retrieving Data, ',
-        e.message,
+        e,
       );
     }
   }
@@ -76,7 +67,7 @@ export class FilesService {
     } catch (e) {
       throw new InternalServerErrorException(
         'Error Occurred When Retrieving Data, ',
-        e.message,
+        e,
       );
     }
 
@@ -89,7 +80,6 @@ export class FilesService {
     if (file.owner !== userId) {
       throw new UnauthorizedException('Does Not Have Access to File');
     }
-    console.log(file.data);
     return file;
   }
 }
