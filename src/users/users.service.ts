@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from '../dtos/UserDto';
+import { ResponseMessage } from '../types';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,7 @@ export class UsersService {
     }
   }
 
-  async createUser(user: UserDto): Promise<User> {
+  async createUser(user: UserDto): Promise<ResponseMessage> {
     const existingUser = await this.findUser(user);
 
     if (existingUser) {
@@ -37,6 +38,7 @@ export class UsersService {
       );
     }
 
-    return await new this.userModel(user).save();
+    await new this.userModel(user).save();
+    return { message: 'User created successfully' };
   }
 }

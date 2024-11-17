@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { ResponseMessage } from './types';
+import { ResponseMessage } from '../types';
 import { JwtValidationGuard } from '../guards/jwt-validation.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
