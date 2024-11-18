@@ -7,8 +7,6 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-    networks:
-      - mongo_network
     volumes:
       - mongo_data:/data/db
     restart: always
@@ -25,12 +23,7 @@ services:
       - "${PORT}:${PORT}"
     depends_on:
       - mongo
-    networks:
-      - mongo_network
-
-networks:
-  mongo_network:
-    driver: bridge
+    restart: always
 
 volumes:
   mongo_data:
