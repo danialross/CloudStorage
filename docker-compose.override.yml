@@ -20,7 +20,7 @@ services:
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - PORT=${PORT}
-      - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
+      - MONGOURI=${MONGOURI}
     ports:
       - "${PORT}:${PORT}"
     depends_on:
