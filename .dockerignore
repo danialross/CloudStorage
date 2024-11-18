@@ -1,6 +1,9 @@
 .prettierrc
 .eslintrc.js
+.idea
+.env
 node_modules
 Dockerfile
+Dockerfile.prod
 docker-compose.yml
-.idea
+docker-compose.prod.yml

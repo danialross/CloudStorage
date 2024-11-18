@@ -34,7 +34,7 @@ export class FilesController {
     //get just the token
     const token = authHeader.split(' ')[1];
     try {
-      return await this.fileService.saveToDb(file, token);
+      return await this.fileService.saveFile(file, token);
     } catch (e) {
       throw new InternalServerErrorException(
         'Unable To Save File ,',

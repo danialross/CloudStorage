@@ -17,7 +17,7 @@ export class FilesService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async saveToDb(
+  async saveFile(
     file: Express.Multer.File,
     token: string,
   ): Promise<ResponseMessage> {
