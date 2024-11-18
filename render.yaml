@@ -1,7 +1,7 @@
 services:
   - name: mongo-db
     type: web
-    image: mongo
+    image: docker.io/mongo:latest
     plan: free
     envVars:
       - key: MONGO_INITDB_ROOT_USERNAME
