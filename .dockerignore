@@ -6,4 +6,4 @@ node_modules
 Dockerfile
 Dockerfile.prod
 docker-compose.yml
-docker-compose.override.yml
+render.yml
