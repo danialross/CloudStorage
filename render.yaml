@@ -15,17 +15,14 @@ services:
   - name: nest-backend
     type: web
     env: docker
-    plan: fre
-    dockerfilePath: ./Dockerfile.prod.prod
-    buildCommand: "docker-compose build"
-    startCommand: "docker-compose up"
+    dockerfilePath: ./Dockerfile.prod
     envVars:
       - key: JWT_SECRET
         value: ${JWT_SECRET}
       - key: PORT
         value: ${PORT}
       - key: MONGOURI
-        value: mongodb://<MONGO_INITDB_ROOT_USERNAME>:<MONGO_INITDB_ROOT_PASSWORD>@mongo:27017/${MONGO_INITDB_DATABASE}
+        value: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}
     restartPolicy: always
     dependsOn:
       - mongo-db
