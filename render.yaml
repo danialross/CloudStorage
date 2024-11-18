@@ -1,0 +1,32 @@
+services:
+  - name: mongo-db
+    type: web
+    env: docker
+    image: mongo:latest
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        value: ${MONGO_INITDB_ROOT_USERNAME}
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        value: ${MONGO_INITDB_ROOT_PASSWORD}
+      - key: MONGO_INITDB_DATABASE
+        value: ${MONGO_INITDB_DATABASE}
+    restartPolicy: always
+
+  - name: nest-backend
+    type: web
+    env: docker
+    plan: fre
+    dockerfilePath: ./Dockerfile.prod.prod
+    buildCommand: "docker-compose build"
+    startCommand: "docker-compose up"
+    envVars:
+      - key: JWT_SECRET
+        value: ${JWT_SECRET}
+      - key: PORT
+        value: ${PORT}
+      - key: MONGOURI
+        value: mongodb://<MONGO_INITDB_ROOT_USERNAME>:<MONGO_INITDB_ROOT_PASSWORD>@mongo:27017/${MONGO_INITDB_DATABASE}
+    restartPolicy: always
+    dependsOn:
+      - mongo-db
+
