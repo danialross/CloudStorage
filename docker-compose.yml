@@ -7,30 +7,32 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+    restart: always
     networks:
       - database-network
-    volumes:
-      - mongo-data:/data/db
 
   app:
-    container_name: app
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     environment:
-      - PORT=${PORT}
-      - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT}
+      - MONGOURI=mongodb://mongo:27017/${MONGO_INITDB_DATABASE}
     ports:
       - "${PORT}:${PORT}"
-    networks:
-      - database-network
     depends_on:
       - mongo
-    volumes:
-      - ./src:/usr/app/src
+    restart: always
+    networks:
+      - database-network
 
 networks:
   database-network:
     driver: bridge
 
+
 volumes:
-  mongo-data:
+  mongo_data:
