@@ -18,7 +18,7 @@ services:
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - PORT=${PORT}
-      - MONGOURI=${MONGOURI}
+      - MONGOURI=mongodb://mongoDB:27017${MONGO_INITDB_DATABASE}
     ports:
       - "${PORT}:${PORT}"
     depends_on:
