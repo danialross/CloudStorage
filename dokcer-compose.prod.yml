@@ -14,7 +14,9 @@ services:
 
   app:
     container_name: app
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     environment:
       - PORT=${PORT}
       - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin

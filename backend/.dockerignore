@@ -3,7 +3,7 @@
 .idea
 .env
 node_modules
-Dockerfile
 Dockerfile.prod
 docker-compose.yml
-docker-compose.override.yml
+docker
+nest-cli.json
