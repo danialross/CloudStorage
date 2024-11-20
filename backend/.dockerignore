@@ -1,9 +1,7 @@
 .prettierrc
 .eslintrc.js
 .idea
-.env
 node_modules
-Dockerfile.prod
-docker-compose.yml
-docker
 nest-cli.json
+README.md
+Dockerfile

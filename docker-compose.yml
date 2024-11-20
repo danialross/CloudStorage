@@ -8,30 +8,42 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     networks:
-      - database-network
+      - app-network
     volumes:
       - mongo-data:/data/db
 
-  app:
-    container_name: app
+  backend-app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     environment:
       - PORT=${PORT}
       - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
-    ports:
-      - "${PORT}:${PORT}"
     networks:
-      - database-network
+      - app-network
     depends_on:
       - mongo
     volumes:
-      - ./src:/usr/app/src
+      - ./backend/src:/usr/app/src
+
+  frontend-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${PORT}
+      - BACKEND_URL=${BACKEND_URL}
+    ports:
+      - "${HOST_PORT}:${PORT}"
+    networks:
+      - app-network
+    volumes:
+      - ./frontend/src:/usr/app/src
+
 
 networks:
-  database-network:
+  app-network:
     driver: bridge
 
 volumes:
