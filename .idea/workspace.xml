@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9cc17dfc-c289-444a-a458-07a129d3e586" name="Changes" comment="init Dockerfile and Compose with basic NestJS structure">
-      <change afterPath="$PROJECT_DIR$/frontend/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/app/home/page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/not-found.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/not-found.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/register/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/register/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/button.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/home/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/home/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +151,7 @@
       <workItem from="1731896413363" duration="20644000" />
       <workItem from="1732008595436" duration="49051000" />
       <workItem from="1732598934076" duration="8611000" />
-      <workItem from="1732607816996" duration="6846000" />
+      <workItem from="1732607816996" duration="13431000" />
     </task>
     <task id="LOCAL-00001" summary="init Dockerfile and Compose with basic NestJS structure">
       <option name="closed" value="true" />
@@ -208,18 +203,6 @@
           <url>file://$PROJECT_DIR$/frontend/tailwind.config.js</url>
           <line>15</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/frontend/src/app/home/page.js</url>
-          <line>98</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/frontend/src/app/home/page.js</url>
-          <line>105</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

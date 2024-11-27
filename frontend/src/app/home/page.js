@@ -1,5 +1,6 @@
 'use client';
 import { FaMixcloud } from 'react-icons/fa';
+import { BsThreeDots } from 'react-icons/bs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,9 +11,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import { useState } from 'react';
 
 export default function Page() {
-  const files = [
+  //store all data in array at load
+  const allFilesData = [
     {
       name: 'Document1',
       fileType: '.pdf',
@@ -79,6 +89,43 @@ export default function Page() {
       fileSize: '100 KB',
     },
   ];
+  const [searchBarData, setSearchBarData] = useState('');
+  const [searchedQuery, setSearchedQuery] = useState('');
+  const [isShowingResultHeader, setIsShowingResultHeader] = useState(false);
+  const [filteredSearch, setFilteredSearch] = useState(allFilesData);
+
+  const filterSearch = () => {
+    setFilteredSearch(
+      allFilesData.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchBarData.toLowerCase()) ||
+          item.fileType.toLowerCase().includes(searchBarData.toLowerCase()),
+      ),
+    );
+  };
+
+  const handleSearch = () => {
+    if (searchBarData === '') {
+      resetSearch();
+      return;
+    }
+    setIsShowingResultHeader(true);
+    setSearchedQuery(searchBarData);
+    filterSearch();
+  };
+
+  const resetSearch = () => {
+    setFilteredSearch(allFilesData);
+    setIsShowingResultHeader(false);
+    setSearchBarData('');
+    setTimeout(() => setSearchedQuery(''), 500);
+  };
+
+  const handleEnterDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <div className={'flex flex-col w-screen h-screen bg-tertiary'}>
@@ -96,13 +143,24 @@ export default function Page() {
             'bg-white outline-2 rounded-xl border-4 p-8 space-y-4 flex-1 flex flex-col'
           }
         >
-          <div className={'flex justify-end'}>
+          <div className={'flex justify-end relative'}>
+            <span
+              className={`absolute left-2 top-1/2 -translate-y-1/2  text-lg transition-all duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
+            >{`Result for '${searchedQuery}'`}</span>
             <div className={'flex w-1/4 gap-4'}>
-              <Input placeholder={'Search'} />
-              <Button>Search</Button>
+              <Input
+                placeholder={'Search'}
+                onChange={(e) => setSearchBarData(e.target.value)}
+                value={searchBarData}
+                onKeyDown={handleEnterDown}
+              />
+              <Button onClick={handleSearch}>Search</Button>
+              <Button onClick={resetSearch} variant={'destructive'}>
+                Clear
+              </Button>
             </div>
           </div>
-          <div className={' max-h-[650px] overflow-auto'}>
+          <div className={'max-h-[600px] overflow-auto'}>
             <Table>
               <TableHeader>
                 <TableRow className={'h-16'}>
@@ -112,19 +170,31 @@ export default function Page() {
                   <TableHead className={'w-[200px]'}>Action</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {files.map((data) => (
+              <TableBody
+                className={'transition-opacity duration-200 ease-in-out'}
+              >
+                {filteredSearch.map((data) => (
                   <TableRow key={data.name} className={'h-16'}>
                     <TableCell>{data.name}</TableCell>
                     <TableCell>{data.fileType}</TableCell>
                     <TableCell>{data.fileSize}</TableCell>
                     <TableCell>
-                      <Button
-                        variant={'tertiary'}
-                        onClick={() => console.log('clicked')}
-                      >
-                        Download
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button
+                            variant={'outline'}
+                            onClick={() => console.log('clicked')}
+                          >
+                            <BsThreeDots />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>Download</DropdownMenuItem>
+                          <DropdownMenuItem className={'text-destructive'}>
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
