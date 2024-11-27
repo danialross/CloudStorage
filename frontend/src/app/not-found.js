@@ -12,7 +12,7 @@ export default function Page() {
     >
       <BsSignDeadEnd size={400} className={'text-white'} />
       <span className={'text-5xl font-bold text-white'}>
-        Oh No! The Resource Isn't Here
+        Oh No! The Resource Isn&#39;t Here
       </span>
       <Link
         href={'/'}
