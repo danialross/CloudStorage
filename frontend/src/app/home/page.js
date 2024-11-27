@@ -128,78 +128,99 @@ export default function Page() {
   };
 
   return (
-    <div className={'flex flex-col w-screen h-screen bg-tertiary'}>
+    <div className={'min-h-screen flex flex-col bg-tertiary'}>
       <div
         className={
-          'text-white flex justify-start items-center text-4xl font-bold gap-4 px-16 pt-4'
+          'text-white flex justify-center md:justify-start items-center text-3xl md:text-5xl font-bold gap-4 md:pl-16 pt-4 '
         }
       >
         <FaMixcloud size={100} />
         Cloud Storage
       </div>
-      <div className={'px-16 pt-4 pb-8 flex flex-col flex-1'}>
+      <div className={'w-full h-full px-16 pt-4 pb-8 flex flex-1'}>
         <div
           className={
-            'bg-white outline-2 rounded-xl border-4 p-8 space-y-4 flex-1 flex flex-col'
+            'w-full h-full bg-white outline-2 rounded-xl border-4 p-8 space-y-4 flex-1 flex flex-col'
           }
         >
-          <div className={'flex justify-end relative'}>
+          <div className={'flex  justify-center sm:justify-end relative'}>
             <span
-              className={`absolute left-2 top-1/2 -translate-y-1/2  text-lg transition-all duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
+              className={`text-gray-400 absolute left-0 -bottom-8 md:-bottom-4  text-md transition-opacity duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
             >{`Result for '${searchedQuery}'`}</span>
-            <div className={'flex w-1/4 gap-4'}>
+            <div className={'flex flex-col sm:flex-row gap-4'}>
               <Input
                 placeholder={'Search'}
                 onChange={(e) => setSearchBarData(e.target.value)}
                 value={searchBarData}
+                className={'min-w-[150px] max-w-[300px]'}
                 onKeyDown={handleEnterDown}
               />
-              <Button onClick={handleSearch}>Search</Button>
-              <Button onClick={resetSearch} variant={'destructive'}>
-                Clear
-              </Button>
+              <div className={'flex gap-4'}>
+                <Button onClick={handleSearch} className={'w-full'}>
+                  Search
+                </Button>
+                <Button
+                  onClick={resetSearch}
+                  variant={'destructive'}
+                  className={'w-full'}
+                >
+                  Clear
+                </Button>
+              </div>
             </div>
           </div>
-          <div className={'max-h-[600px] overflow-auto'}>
-            <Table>
-              <TableHeader>
-                <TableRow className={'h-16'}>
-                  <TableHead className={'w-[400px]'}>Name</TableHead>
-                  <TableHead className={'w-[200px]'}>Type</TableHead>
-                  <TableHead className={'w-[200px]'}>Size</TableHead>
-                  <TableHead className={'w-[200px]'}>Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                className={'transition-opacity duration-200 ease-in-out'}
-              >
-                {filteredSearch.map((data) => (
-                  <TableRow key={data.name} className={'h-16'}>
-                    <TableCell>{data.name}</TableCell>
-                    <TableCell>{data.fileType}</TableCell>
-                    <TableCell>{data.fileSize}</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button
-                            variant={'outline'}
-                            onClick={() => console.log('clicked')}
-                          >
-                            <BsThreeDots />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>Download</DropdownMenuItem>
-                          <DropdownMenuItem className={'text-destructive'}>
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          <div className={'h-full max-h-[650px] overflow-auto'}>
+            {filteredSearch.length !== 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow className={'h-16'}>
+                    <TableHead>Name</TableHead>
+                    <TableHead className={' hidden md:table-cell'}>
+                      Type
+                    </TableHead>
+                    <TableHead className={' hidden md:table-cell'}>
+                      Size
+                    </TableHead>
+                    <TableHead>Action</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody
+                  className={'transition-opacity duration-200 ease-in-out'}
+                >
+                  {filteredSearch.map((data, index) => (
+                    <TableRow key={index} className={'h-16'}>
+                      <TableCell>{data.name}</TableCell>
+                      <TableCell className={' hidden md:table-cell'}>
+                        {data.fileType}
+                      </TableCell>
+                      <TableCell className={' hidden md:table-cell'}>
+                        {data.fileSize}
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant={'outline'}
+                              onClick={() => console.log('clicked')}
+                            >
+                              <BsThreeDots />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>Download</DropdownMenuItem>
+                            <DropdownMenuItem className={'text-destructive'}>
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className={'w-full text-gray-400 py-8'}>No Results</div>
+            )}
           </div>
         </div>
       </div>

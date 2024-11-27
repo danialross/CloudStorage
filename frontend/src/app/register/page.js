@@ -15,84 +15,88 @@ export default function Page() {
   };
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="w-screen h-screen inline lg:flex">
       <div
-        className={'w-1/2 flex flex-col justify-center items-start p-64 gap-8'}
+        className={
+          'w-full lg:w-1/2 flex flex-col justify-center items-center py-32'
+        }
       >
-        <div className={'flex flex-col gap-2'}>
-          <span className={'text-3xl font-bold'}>Register</span>
-          <span className={'text-xl'}>
-            Sign Up to Store and Access Files Anywhere
-          </span>
-        </div>
-        <div className={'flex flex-col w-full gap-2'}>
-          <span className={'font-bold'}>Email</span>
-          <Input placeholder={'Email'} />
-        </div>
-        <div className={'flex flex-col w-full gap-2'}>
-          <span className={'font-bold'}>Password</span>
-          <div className={'flex gap-2 relative'}>
-            <Input
-              placeholder={'Password'}
-              type={isShowingPassword ? 'text' : 'password'}
-            />
-            <div
-              tabIndex={-1}
-              className={
-                'absolute right-0 top-0 -translate-x-1/2 translate-y-1/2 '
-              }
-              onClick={() => toggleVisibility(setIsShowingPassword)}
-            >
-              {isShowingPassword ? (
-                <FaRegEyeSlash size={18} />
-              ) : (
-                <FaRegEye size={18} />
-              )}
+        <div className={'flex flex-col gap-8 w-1/2'}>
+          <div className={'flex flex-col gap-2'}>
+            <span className={'text-3xl font-bold'}>Register</span>
+            <span className={'text-xl'}>
+              Sign Up to Store and Access Files Anywhere
+            </span>
+          </div>
+          <div className={'flex flex-col w-full gap-2'}>
+            <span className={'font-bold'}>Email</span>
+            <Input placeholder={'Email'} />
+          </div>
+          <div className={'flex flex-col w-full gap-2'}>
+            <span className={'font-bold'}>Password</span>
+            <div className={'flex gap-2 relative'}>
+              <Input
+                placeholder={'Password'}
+                type={isShowingPassword ? 'text' : 'password'}
+              />
+              <div
+                tabIndex={-1}
+                className={
+                  'absolute right-0 top-0 -translate-x-1/2 translate-y-1/2 '
+                }
+                onClick={() => toggleVisibility(setIsShowingPassword)}
+              >
+                {isShowingPassword ? (
+                  <FaRegEyeSlash size={18} />
+                ) : (
+                  <FaRegEye size={18} />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className={'flex flex-col w-full gap-2'}>
-          <span className={'font-bold'}>Re-typed Password</span>
-          <div className={'flex gap-2 relative'}>
-            <Input
-              className={''}
-              placeholder={'Re-typed Password'}
-              type={isShowingRetyped ? 'text' : 'password'}
-            />
-            <div
-              tabIndex={-1}
-              className={
-                'absolute right-0 top-0 -translate-x-1/2 translate-y-1/2 '
-              }
-              onClick={() => toggleVisibility(setIsShowingRetyped)}
-            >
-              {isShowingRetyped ? (
-                <FaRegEyeSlash size={18} />
-              ) : (
-                <FaRegEye size={18} />
-              )}
+          <div className={'flex flex-col w-full gap-2'}>
+            <span className={'font-bold'}>Re-typed Password</span>
+            <div className={'flex gap-2 relative'}>
+              <Input
+                className={''}
+                placeholder={'Re-typed Password'}
+                type={isShowingRetyped ? 'text' : 'password'}
+              />
+              <div
+                tabIndex={-1}
+                className={
+                  'absolute right-0 top-0 -translate-x-1/2 translate-y-1/2 '
+                }
+                onClick={() => toggleVisibility(setIsShowingRetyped)}
+              >
+                {isShowingRetyped ? (
+                  <FaRegEyeSlash size={18} />
+                ) : (
+                  <FaRegEye size={18} />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className={'flex flex-col w-full gap-4'}>
-          <span>
-            Already have an account?
-            <Link href={'/'} className={'text-blue-500'}>
-              {' '}
-              Login.
-            </Link>
-          </span>
-          <Button className={'w-full font-bold'}>Register</Button>
+          <div className={'flex flex-col w-full gap-4'}>
+            <span>
+              Already have an account?
+              <Link href={'/'} className={'text-blue-500'}>
+                {' '}
+                Login.
+              </Link>
+            </span>
+            <Button className={'w-full font-bold'}>Register</Button>
+          </div>
         </div>
       </div>
-      <div className={'bg-tertiary w-1/2'}>
+      <div className={'bg-tertiary w-full lg:w-1/2'}>
         <div
           className={
-            'w-full h-full flex justify-center items-center flex-col text-white gap-8'
+            'w-full h-full flex justify-center items-center flex-col text-white gap-8 py-32'
           }
         >
           <MdOutlineWavingHand className={'w-1/4 h-1/4'} />
-          <span className={'text-5xl font-bold'}>Welcome</span>
+          <span className={'text-3xl lg:text-5xl font-bold'}>Welcome</span>
         </div>
       </div>
     </div>
