@@ -18,7 +18,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
 import { useState } from 'react';
+import { Label } from '@radix-ui/react-dropdown-menu';
 
 export default function Page() {
   //store all data in array at load
@@ -148,6 +159,34 @@ export default function Page() {
               className={`text-gray-400 absolute left-0 -bottom-8 md:-bottom-4  text-md transition-opacity duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
             >{`Result for '${searchedQuery}'`}</span>
             <div className={'flex flex-col sm:flex-row gap-4'}>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button onClick={handleSearch} variant={'outline'}>
+                    Add Files
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add File</DialogTitle>
+                  </DialogHeader>
+                  <div className={'w-full flex flex-col items-center'}>
+                    <span>Select A File To Upload</span>
+                    <div className="grid w-2/3 items-center gap-1.5 py-8">
+                      <Label htmlFor="file" className={'hidden'}>
+                        File
+                      </Label>
+                      <Input id="file" type="file" />
+                    </div>
+                  </div>
+                  <div className={'flex justify-between'}>
+                    <DialogClose asChild>
+                      <Button>Close</Button>
+                    </DialogClose>
+                    <Button variant={'outline'}>Add</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               <Input
                 placeholder={'Search'}
                 onChange={(e) => setSearchBarData(e.target.value)}
