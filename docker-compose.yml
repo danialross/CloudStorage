@@ -17,7 +17,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - PORT=${PORT}
+      - PORT=${BACKEND_PORT}
       - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
     networks:
@@ -32,10 +32,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      - PORT=${PORT}
+      - PORT=${FRONTEND_PORT}
       - BACKEND_URL=${BACKEND_URL}
     ports:
-      - "${HOST_PORT}:${PORT}"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:
       - app-network
     volumes:
