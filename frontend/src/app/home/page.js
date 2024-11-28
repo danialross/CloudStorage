@@ -17,18 +17,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-
-import { useState } from 'react';
+import { IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { RxCrossCircled } from 'react-icons/rx';
+import { useEffect, useRef, useState } from 'react';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
 export default function Page() {
@@ -100,10 +99,17 @@ export default function Page() {
       fileSize: '100 KB',
     },
   ];
+  const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
+  const FAILED_UPLOAD_MESSSAGE = 'Error Uploading File';
   const [searchBarData, setSearchBarData] = useState('');
   const [searchedQuery, setSearchedQuery] = useState('');
   const [isShowingResultHeader, setIsShowingResultHeader] = useState(false);
   const [filteredSearch, setFilteredSearch] = useState(allFilesData);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [didUploadSucceed, setDidUploadSucceed] = useState(false);
+  const [didUploadFail, setDidUploadFail] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const filterSearch = () => {
     setFilteredSearch(
@@ -138,6 +144,53 @@ export default function Page() {
     }
   };
 
+  const handleClearFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleAddFile = () => {
+    if (!uploadedFile) {
+      return;
+    }
+
+    setIsUploading(true);
+
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+
+    try {
+      //make axios req to send to backend
+      throw new Error();
+      setDidUploadSucceed(true);
+      handleClearFileInput();
+    } catch (e) {
+      setDidUploadFail(true);
+    }
+    setIsUploading(false);
+  };
+
+  useEffect(() => {
+    if (didUploadFail) {
+      const timeoutId = setTimeout(() => {
+        setDidUploadFail(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [didUploadFail]);
+
+  useEffect(() => {
+    if (didUploadSucceed) {
+      const timeoutId = setTimeout(() => {
+        setDidUploadSucceed(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [didUploadSucceed]);
+
   return (
     <div className={'min-h-screen flex flex-col bg-tertiary'}>
       <div
@@ -170,19 +223,48 @@ export default function Page() {
                     <DialogTitle>Add File</DialogTitle>
                   </DialogHeader>
                   <div className={'w-full flex flex-col items-center'}>
-                    <span>Select A File To Upload</span>
+                    <span className={'font-bold'}>Select A File To Upload</span>
                     <div className="grid w-2/3 items-center gap-1.5 py-8">
                       <Label htmlFor="file" className={'hidden'}>
                         File
                       </Label>
-                      <Input id="file" type="file" />
+                      <Input
+                        id="file"
+                        type="file"
+                        onChange={(e) => setUploadedFile(e.target.files[0])}
+                        ref={fileInputRef}
+                        className={'text-center'}
+                      />
+                    </div>
+                    <div className={'relative w-full h-8 flex justify-center'}>
+                      {isUploading && 'Uploading...'}
+                      <IoCheckmarkCircleOutline
+                        size={30}
+                        className={`absolute top-0 left-1/2 -translate-x-20 transition-opacity duration-200 ease-in-out text-green-500 ${didUploadSucceed ? 'opacity-100' : 'opacity-0'}`}
+                      />
+                      <span
+                        className={`absolute top-0 left-1/2 -translate-x-12 transition-opacity duration-200 ease-in-out ${didUploadSucceed ? 'opacity-100' : 'opacity-0'}`}
+                      >
+                        {SUCCESS_UPLOAD_MESSSAGE}
+                      </span>
+                      <RxCrossCircled
+                        size={30}
+                        className={`absolute top-0 left-1/2 -translate-x-24 transition-opacity duration-200 ease-in-out text-red-500 ${didUploadFail ? 'opacity-100' : 'opacity-0'}`}
+                      />
+                      <span
+                        className={`absolute top-0 left-1/2 -translate-x-12 transition-opacity duration-200 ease-in-out ${didUploadFail ? 'opacity-100' : 'opacity-0'}`}
+                      >
+                        {FAILED_UPLOAD_MESSSAGE}
+                      </span>
                     </div>
                   </div>
                   <div className={'flex justify-between'}>
                     <DialogClose asChild>
                       <Button>Close</Button>
                     </DialogClose>
-                    <Button variant={'outline'}>Add</Button>
+                    <Button variant={'outline'} onClick={handleAddFile}>
+                      Add
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>
