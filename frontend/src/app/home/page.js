@@ -1,6 +1,10 @@
 'use client';
 import { FaMixcloud } from 'react-icons/fa';
 import { BsThreeDots } from 'react-icons/bs';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { RxCross2 } from 'react-icons/rx';
+import { FiPlus } from 'react-icons/fi';
+import { PiSignOutBold } from 'react-icons/pi';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -193,15 +197,26 @@ export default function Page() {
 
   return (
     <div className={'min-h-screen flex flex-col bg-tertiary'}>
-      <div
-        className={
-          'text-white flex justify-center md:justify-start items-center text-3xl md:text-5xl font-bold gap-4 md:pl-16 pt-4 '
-        }
-      >
-        <FaMixcloud size={100} />
-        Cloud Storage
+      <div className={'flex justify-between items-center px-8 lg:px-16'}>
+        <div
+          className={
+            'text-white flex justify-center items-center text-2xl font-bold gap-4'
+          }
+        >
+          <FaMixcloud size={100} />
+          Cloud Storage
+        </div>
+        <div className={'translate-y-2'}>
+          <button
+            className={
+              ' text-white hover:text-tertiary hover:bg-white rounded-lg'
+            }
+          >
+            <PiSignOutBold size={40} />
+          </button>
+        </div>
       </div>
-      <div className={'w-full h-full px-16 pt-4 pb-8 flex flex-1'}>
+      <div className={'w-full h-full px-8 lg:px-16 pt-4 pb-8 flex flex-1'}>
         <div
           className={
             'w-full h-full bg-white outline-2 rounded-xl border-4 p-8 space-y-4 flex-1 flex flex-col'
@@ -209,13 +224,13 @@ export default function Page() {
         >
           <div className={'flex  justify-center sm:justify-end relative'}>
             <span
-              className={`text-gray-400 absolute left-0 -bottom-8 md:-bottom-4  text-md transition-opacity duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
+              className={`text-gray-400 absolute left-0 -bottom-12 md:-bottom-4  text-md transition-opacity duration-200 ease-in-out ${isShowingResultHeader ? 'opacity-100' : 'opacity-0'} `}
             >{`Result for '${searchedQuery}'`}</span>
-            <div className={'flex flex-col sm:flex-row gap-4'}>
+            <div className={'flex flex-col sm:flex-row gap-4 w-full lg:w-fit'}>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button onClick={handleSearch} variant={'outline'}>
-                    Add Files
+                  <Button variant={'outline'}>
+                    <FiPlus />
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -223,8 +238,8 @@ export default function Page() {
                     <DialogTitle>Add File</DialogTitle>
                   </DialogHeader>
                   <div className={'w-full flex flex-col items-center'}>
-                    <span className={'font-bold'}>Select A File To Upload</span>
-                    <div className="grid w-2/3 items-center gap-1.5 py-8">
+                    <span className={'font-'}>Select A File To Upload</span>
+                    <div className="grid w-2/3 items-center gap-1.5 py-4">
                       <Label htmlFor="file" className={'hidden'}>
                         File
                       </Label>
@@ -278,31 +293,31 @@ export default function Page() {
               />
               <div className={'flex gap-4'}>
                 <Button onClick={handleSearch} className={'w-full'}>
-                  Search
+                  <FaMagnifyingGlass />
                 </Button>
                 <Button
                   onClick={resetSearch}
-                  variant={'destructive'}
+                  variant={'outline'}
                   className={'w-full'}
                 >
-                  Clear
+                  <RxCross2 className={'font-bold'} />
                 </Button>
               </div>
             </div>
           </div>
-          <div className={'h-full max-h-[650px] overflow-auto'}>
+          <div className={'h-full max-h-[650px] overflow-auto pt-8 lg:pt-0'}>
             {filteredSearch.length !== 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow className={'h-16'}>
                     <TableHead>Name</TableHead>
-                    <TableHead className={' hidden md:table-cell'}>
+                    <TableHead className={'text-center hidden md:table-cell'}>
                       Type
                     </TableHead>
-                    <TableHead className={' hidden md:table-cell'}>
+                    <TableHead className={'text-center hidden md:table-cell'}>
                       Size
                     </TableHead>
-                    <TableHead>Action</TableHead>
+                    <TableHead className={'text-center'}>Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -311,13 +326,13 @@ export default function Page() {
                   {filteredSearch.map((data, index) => (
                     <TableRow key={index} className={'h-16'}>
                       <TableCell>{data.name}</TableCell>
-                      <TableCell className={' hidden md:table-cell'}>
+                      <TableCell className={'text-center hidden md:table-cell'}>
                         {data.fileType}
                       </TableCell>
-                      <TableCell className={' hidden md:table-cell'}>
+                      <TableCell className={'text-center hidden md:table-cell'}>
                         {data.fileSize}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={'text-center'}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
