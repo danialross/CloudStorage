@@ -95,7 +95,9 @@ export default function Page() {
             'w-full h-full flex justify-center items-center flex-col text-white gap-8 py-32'
           }
         >
-          <MdOutlineWavingHand className={'w-1/4 h-1/4'} />
+          <MdOutlineWavingHand
+            className={'min-w-[200px] min-h-[200px] w-[200px] h-[200px]'}
+          />
           <span className={'text-3xl lg:text-5xl font-bold'}>Welcome</span>
         </div>
       </div>

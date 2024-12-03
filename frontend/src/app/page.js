@@ -46,21 +46,27 @@ export default function Page() {
 
   return (
     <div className="w-screen h-screen inline md:flex ">
-      <div className={'bg-tertiary w-full lg:w-1/2 py-32'}>
+      <div
+        className={
+          'bg-tertiary lg:w-1/2 pt-40 pb-32 lg:py-0 h-full flex justify-center items-center '
+        }
+      >
         <div
           className={
-            'w-full h-full flex justify-center items-center flex-col text-white'
+            'relative flex flex-col text-white justify-center items-center -translate-y-10'
           }
         >
-          <FaMixcloud className={'w-1/2 h-1/2 '} />
-          <span className={' text-3xl lg:text-5xl font-bold'}>
+          <FaMixcloud
+            className={'w-[200px] h-[200px] lg:w-[400px] lg:h-[400px]  '}
+          />
+          <span className={'absolute bottom-0 text-3xl lg:text-5xl font-bold'}>
             Cloud Storage
           </span>
         </div>
       </div>
       <div
         className={
-          'w-full lg:w-1/2 flex flex-col justify-center items-center py-32'
+          'w-full lg:w-1/2 flex flex-col justify-center items-center py-32 lg:py-0'
         }
       >
         <div className={'flex flex-col gap-6 w-1/2'}>
