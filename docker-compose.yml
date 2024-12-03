@@ -21,8 +21,8 @@ services:
       - MONGOURI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_URL=${FRONTEND_URL}
-    #    ports:
-    #      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     networks:
       - app-network
     depends_on:
@@ -39,8 +39,6 @@ services:
       - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-    networks:
-      - app-network
     volumes:
       - ./frontend/src:/usr/app/src
 

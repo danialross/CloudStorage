@@ -18,6 +18,7 @@ export default function Page() {
     getValues,
   } = useForm();
   const [isShowingPassword, setIsShowingPassword] = useState(false);
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
 
   const handleLogin = async () => {
     const body = getValues();
@@ -26,7 +27,10 @@ export default function Page() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
         body,
         {
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
         },
       );
       const expirationTime = new Date();
@@ -34,7 +38,9 @@ export default function Page() {
       document.cookie = `token=${response.data.token}; expires=${expirationTime.toUTCString()} path=/; SameSite=Strict`;
       router.push(`/home`);
     } catch (e) {
-      console.error(e.message);
+      if (e.status === 401) {
+        setLoginErrorMessage('The username or password is incorrect');
+      }
     }
   };
 
@@ -94,6 +100,7 @@ export default function Page() {
                 )}
               </div>
             </div>
+            <span className={'text-destructive'}>{loginErrorMessage}</span>
             <Button className={'w-full font-bold mt-4'} onClick={handleLogin}>
               Login
             </Button>
