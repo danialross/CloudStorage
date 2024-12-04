@@ -23,19 +23,12 @@ export default function Page() {
   const handleLogin = async () => {
     const body = getValues();
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
-        body,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, body, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-      );
-      const expirationTime = new Date();
-      expirationTime.setMinutes(expirationTime.getMinutes() + 60);
-      document.cookie = `token=${response.data.token}; expires=${expirationTime.toUTCString()} path=/; SameSite=Strict`;
+      });
       router.push(`/home`);
     } catch (e) {
       if (e.status === 401) {
