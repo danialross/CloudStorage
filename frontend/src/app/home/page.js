@@ -175,6 +175,10 @@ export default function Page() {
     setIsUploading(false);
   };
 
+  const handleLogout = () => {
+    localStorage.co;
+  };
+
   useEffect(() => {
     if (didUploadFail) {
       const timeoutId = setTimeout(() => {
@@ -197,7 +201,7 @@ export default function Page() {
 
   return (
     <div className={'min-h-screen flex flex-col bg-tertiary'}>
-      <div className={'flex justify-between items-center px-8 lg:px-16'}>
+      <div className={'flex justify-between items-center px-8 lg:px-16 pt-4'}>
         <div
           className={
             'text-white flex justify-center items-center text-2xl font-bold gap-4'
@@ -209,10 +213,10 @@ export default function Page() {
         <div className={'translate-y-2'}>
           <button
             className={
-              ' text-white hover:text-tertiary hover:bg-white rounded-lg'
+              ' text-white hover:text-tertiary hover:bg-white rounded-lg p-2 text-[30px] lg:text-[40px]'
             }
           >
-            <PiSignOutBold size={40} />
+            <PiSignOutBold />
           </button>
         </div>
       </div>

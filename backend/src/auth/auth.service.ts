@@ -31,7 +31,6 @@ export class AuthService {
 
   async login(loginDetails: UserDto): Promise<string> {
     const user = await this.userService.findUser(loginDetails);
-
     if (!user) {
       throw new UnauthorizedException('User Not Found');
     }

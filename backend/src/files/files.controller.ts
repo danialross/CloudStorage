@@ -2,11 +2,11 @@ import {
   Controller,
   Delete,
   Get,
-  Headers,
   InternalServerErrorException,
   Param,
   Post,
   Res,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -15,7 +15,7 @@ import { FilesService } from './files.service';
 import { ResponseMessage } from '../types';
 import { JwtValidationGuard } from '../guards/jwt-validation.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { File } from '../schemas/file.schema';
 
 @Controller('files')
@@ -29,10 +29,10 @@ export class FilesController {
   )
   async upload(
     @UploadedFile() file: Express.Multer.File,
-    @Headers('authorization') authHeader: string,
+    @Req() request: Request,
   ): Promise<ResponseMessage> {
     //get just the token
-    const token = authHeader.split(' ')[1];
+    const token = request.cookies['token'];
     try {
       return await this.fileService.saveFile(file, token);
     } catch (e) {
@@ -45,21 +45,19 @@ export class FilesController {
 
   @Get()
   @UseGuards(JwtValidationGuard)
-  async getFiles(
-    @Headers('authorization') authHeader: string,
-  ): Promise<File[]> {
-    const token = authHeader.split(' ')[1];
+  async getFiles(@Req() request: Request): Promise<File[]> {
+    const token = request.cookies['token'];
     return await this.fileService.getFileList(token);
   }
 
   @Get(':fileId')
   @UseGuards(JwtValidationGuard)
   async getFile(
-    @Headers('authorization') authHeader: string,
+    @Req() request: Request,
     @Param('fileId') fileId: string,
     @Res() res: Response,
   ) {
-    const token = authHeader.split(' ')[1];
+    const token = request.cookies['token'];
     const file: File = await this.fileService.getFile(fileId, token);
     res.setHeader('Content-Type', file.type);
     res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
@@ -70,9 +68,9 @@ export class FilesController {
   @UseGuards(JwtValidationGuard)
   async deleteFile(
     @Param('fileId') fileId: string,
-    @Headers('authorization') authHeader: string,
+    @Req() request: Request,
   ): Promise<ResponseMessage> {
-    const token = authHeader.split(' ')[1];
+    const token = request.cookies['token'];
     return await this.fileService.deleteFile(fileId, token);
   }
 }
