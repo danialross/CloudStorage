@@ -24,11 +24,13 @@ export default function Page() {
     const body = getValues();
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, body, {
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
       });
+      setLoginErrorMessage('');
       router.push(`/home`);
     } catch (e) {
       if (e.status === 401) {
@@ -100,7 +102,7 @@ export default function Page() {
               </div>
             </div>
             <span className={'text-destructive'}>{loginErrorMessage}</span>
-            <Button className={'w-full font-bold mt-4'} onClick={handleLogin}>
+            <Button className={'w-full font-bold mt-4'} type={'submit'}>
               Login
             </Button>
             <span>

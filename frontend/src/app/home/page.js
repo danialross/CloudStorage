@@ -33,6 +33,8 @@ import { IoCheckmarkCircleOutline } from 'react-icons/io5';
 import { RxCrossCircled } from 'react-icons/rx';
 import { useEffect, useRef, useState } from 'react';
 import { Label } from '@radix-ui/react-dropdown-menu';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   //store all data in array at load
@@ -114,6 +116,7 @@ export default function Page() {
   const [didUploadFail, setDidUploadFail] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const router = useRouter();
 
   const filterSearch = () => {
     setFilteredSearch(
@@ -175,8 +178,23 @@ export default function Page() {
     setIsUploading(false);
   };
 
-  const handleLogout = () => {
-    localStorage.co;
+  const handleLogout = async (e) => {
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
+      router.push(`/`);
+    } catch (e) {
+      console.error('Unable to log out');
+    }
   };
 
   useEffect(() => {
@@ -216,7 +234,7 @@ export default function Page() {
               ' text-white hover:text-tertiary hover:bg-white rounded-lg p-2 text-[30px] lg:text-[40px]'
             }
           >
-            <PiSignOutBold />
+            <PiSignOutBold onClick={handleLogout} />
           </button>
         </div>
       </div>

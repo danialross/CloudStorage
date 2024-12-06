@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="9cc17dfc-c289-444a-a458-07a129d3e586" name="Changes" comment="init Dockerfile and Compose with basic NestJS structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/home/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/home/page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/middleware.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +167,7 @@
       <workItem from="1732598934076" duration="8611000" />
       <workItem from="1732607816996" duration="68151000" />
       <workItem from="1733104644643" duration="38634000" />
-      <workItem from="1733283077325" duration="9492000" />
+      <workItem from="1733283077325" duration="48993000" />
     </task>
     <task id="LOCAL-00001" summary="init Dockerfile and Compose with basic NestJS structure">
       <option name="closed" value="true" />
@@ -214,12 +217,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/frontend/src/app/page.js</url>
-          <line>65</line>
+          <line>67</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/frontend/src/app/page.js</url>
-          <line>64</line>
+          <line>66</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -229,7 +232,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/frontend/src/app/page.js</url>
-          <line>87</line>
+          <line>89</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
