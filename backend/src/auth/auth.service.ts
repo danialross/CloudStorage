@@ -57,4 +57,16 @@ export class AuthService {
       );
     }
   }
+
+  async verifyToken(token: string): Promise<{ isAuthenticated: boolean }> {
+    if (!token) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+    try {
+      await this.jwtService.verifyAsync(token);
+    } catch (e) {
+      throw new UnauthorizedException(e.name);
+    }
+    return { isAuthenticated: true };
+  }
 }

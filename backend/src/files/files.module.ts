@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FilesController } from './files.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtValidationGuard } from '../guards/jwt-validation.guard';
 import { MongooseModule } from '@nestjs/mongoose';
 import { File, FileSchema } from '../schemas/file.schema';
 import { UsersModule } from '../users/users.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { UsersModule } from '../users/users.module';
     }),
     MongooseModule.forFeature([{ name: File.name, schema: FileSchema }]),
     UsersModule,
+    AuthModule,
   ],
-  providers: [FilesService, JwtValidationGuard],
+  providers: [FilesService],
   controllers: [FilesController],
   exports: [FilesService],
 })

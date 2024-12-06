@@ -1,29 +1,13 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class JwtValidationGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const token = context.switchToHttp().getRequest().cookies['token'];
-
-    if (!token) {
-      throw new UnauthorizedException('Unauthorized');
-    }
-
-    try {
-      await this.jwtService.verifyAsync(token);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      throw new UnauthorizedException('Unauthorized');
-    }
-
+    await this.authService.verifyToken(token);
     return true;
   }
 }
