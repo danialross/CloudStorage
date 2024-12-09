@@ -15,7 +15,7 @@ export default async function middleware(req) {
       return NextResponse.next();
     }
     //error page
-    return NextResponse.redirect(new URL('/', req.url));
+    return NextResponse.redirect(new URL('/redirect?status=401', req.url));
   }
 
   try {

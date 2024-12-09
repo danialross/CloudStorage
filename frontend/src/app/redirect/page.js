@@ -14,7 +14,7 @@ export default function Page() {
         ? 'You are not logged in. Redirecting to the login page...'
         : 'Unknown error, Redirecting to the login page...';
 
-  const link = status === '200' ? '/' : status === '401' ? '/home' : null;
+  const link = status === '200' ? '/home' : status === '401' ? '/' : null;
 
   useEffect(() => {
     setTimeout(() => router.push(link), 3000);
