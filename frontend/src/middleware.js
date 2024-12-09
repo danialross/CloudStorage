@@ -11,7 +11,7 @@ export default async function middleware(req) {
   // if the user is not authenticated
   if (!token) {
     // allow to enter if entering login page
-    if (path === '/') {
+    if (path === '/' || path === '/register') {
       return NextResponse.next();
     }
     //error page
@@ -38,11 +38,12 @@ export default async function middleware(req) {
       }
     }
 
-    if (path === '/home')
+    if (path === '/home') {
       if (result.status === 200) {
         // only allow if logged in
         return NextResponse.next();
       }
+    }
     //redirect to tell user that they must login first
     return NextResponse.redirect(new URL('/redirect?status=401', req.url));
   } catch (e) {

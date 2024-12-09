@@ -2,6 +2,7 @@
 import { BsExclamationTriangle } from 'react-icons/bs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 export default function Page() {
   const router = useRouter();
@@ -9,15 +10,49 @@ export default function Page() {
   const status = searchParams.get('status');
   const message =
     status === '200'
-      ? 'You are logged in! Redirecting to your dashboard...'
+      ? 'You’re already logged in. Redirecting to your dashboard...'
       : status === '401'
-        ? 'You are not logged in. Redirecting to the login page...'
-        : 'Unknown error, Redirecting to the login page...';
-
-  const link = status === '200' ? '/home' : status === '401' ? '/' : null;
+        ? 'You need to be logged in to access this page. Redirecting to the login page...'
+        : status === '404'
+          ? "Oops! The page you’re looking for doesn't exist. You’re being redirected shortly... "
+          : 'An unexpected error occurred. Redirecting you to the login page...';
 
   useEffect(() => {
-    setTimeout(() => router.push(link), 3000);
+    const getRedirectLink = async () => {
+      //for 404 error, redirect to login page or home page based on if logged in or not
+      if (status === '404') {
+        try {
+          await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              withCredentials: true,
+            },
+          );
+          //if nothing goes wrong then auth is verified
+          return '/home';
+        } catch (e) {
+          return '/';
+        }
+      } else if (status === '200') {
+        return '/home';
+      } else {
+        return '/';
+      }
+    };
+
+    async function redirectUser() {
+      setTimeout(async () => {
+        // if the request does not resolve within 3 seconds, send user to login page
+        const link = (await getRedirectLink()) || '/';
+        router.push(link);
+      }, 3000);
+    }
+
+    redirectUser();
   }, []);
   return (
     <div
