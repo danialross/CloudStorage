@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9cc17dfc-c289-444a-a458-07a129d3e586" name="Changes" comment="init Dockerfile and Compose with basic NestJS structure">
-      <change afterPath="$PROJECT_DIR$/frontend/utils/auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/not-found.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/not-found.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/files/files.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/files/files.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/home/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/home/page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/redirect/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/redirect/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/middleware.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +165,8 @@
       <workItem from="1732598934076" duration="8611000" />
       <workItem from="1732607816996" duration="68151000" />
       <workItem from="1733104644643" duration="38634000" />
-      <workItem from="1733283077325" duration="64206000" />
+      <workItem from="1733283077325" duration="68082000" />
+      <workItem from="1733811750600" duration="7608000" />
     </task>
     <task id="LOCAL-00001" summary="init Dockerfile and Compose with basic NestJS structure">
       <option name="closed" value="true" />
@@ -237,6 +237,12 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/backend/src/main.ts</url>
           <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/frontend/src/app/home/page.js</url>
+          <line>305</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

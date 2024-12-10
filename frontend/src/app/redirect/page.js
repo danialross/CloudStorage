@@ -60,8 +60,10 @@ export default function Page() {
         ' bg-tertiary w-screen h-screen flex flex-col justify-center items-center gap-8'
       }
     >
-      <BsExclamationTriangle size={400} className={'text-white'} />
-      <span className={'text-5xl font-bold text-white'}>{message}</span>
+      <BsExclamationTriangle size={200} className={'text-white text-4xl'} />
+      <span className={'text-lg lg:text-3xl text-center font-bold text-white'}>
+        {message}
+      </span>
     </div>
   );
 }

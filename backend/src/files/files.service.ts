@@ -51,7 +51,9 @@ export class FilesService {
   async getFileList(token: string): Promise<File[]> {
     const { user }: JwtPayload = await this.jwtService.decode(token);
     try {
-      return await this.fileModel.find({ owner: user.id }, 'name').exec();
+      return await this.fileModel
+        .find({ owner: user.id }, 'name type size')
+        .exec();
     } catch (e) {
       throw new InternalServerErrorException(
         'Error Occurred When Retrieving Data, ',

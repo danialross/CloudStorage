@@ -5,6 +5,8 @@ import { FaMagnifyingGlass } from 'react-icons/fa6';
 import { RxCross2 } from 'react-icons/rx';
 import { FiPlus } from 'react-icons/fi';
 import { PiSignOutBold } from 'react-icons/pi';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { GrDocumentMissing } from 'react-icons/gr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,93 +39,27 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
-  //store all data in array at load
-  const allFilesData = [
-    {
-      name: 'Document1',
-      fileType: '.pdf',
-      fileSize: '1.2 MB',
-    },
-    {
-      name: 'Image1',
-      fileType: '.jpg',
-      fileSize: '2.4 MB',
-    },
-    {
-      name: 'Presentation1',
-      fileType: '.pptx',
-      fileSize: '5.7 MB',
-    },
-    {
-      name: 'Spreadsheet1',
-      fileType: '.xlsx',
-      fileSize: '3.1 MB',
-    },
-    {
-      name: 'Script1',
-      fileType: '.js',
-      fileSize: '450 KB',
-    },
-    {
-      name: 'Report1',
-      fileType: '.docx',
-      fileSize: '2.0 MB',
-    },
-    {
-      name: 'Audio1',
-      fileType: '.mp3',
-      fileSize: '8.6 MB',
-    },
-    {
-      name: 'Video1',
-      fileType: '.mp4',
-      fileSize: '25.3 MB',
-    },
-    {
-      name: 'Archive1',
-      fileType: '.zip',
-      fileSize: '15.2 MB',
-    },
-    {
-      name: 'Notasdes1',
-      fileType: '.txt',
-      fileSize: '100 KB',
-    },
-    {
-      name: 'Notasdeas1',
-      fileType: '.txt',
-      fileSize: '100 KB',
-    },
-    {
-      name: 'Notas1des1',
-      fileType: '.txt',
-      fileSize: '100 KB',
-    },
-    {
-      name: 'Not2asdes1',
-      fileType: '.txt',
-      fileSize: '100 KB',
-    },
-  ];
   const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
   const FAILED_UPLOAD_MESSSAGE = 'Error Uploading File';
   const [searchBarData, setSearchBarData] = useState('');
   const [searchedQuery, setSearchedQuery] = useState('');
   const [isShowingResultHeader, setIsShowingResultHeader] = useState(false);
-  const [filteredSearch, setFilteredSearch] = useState(allFilesData);
+  const [filesList, setFilesList] = useState([]);
+  const [filteredSearch, setFilteredSearch] = useState(filesList);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [didUploadSucceed, setDidUploadSucceed] = useState(false);
   const [didUploadFail, setDidUploadFail] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
   const router = useRouter();
+  const [isLoadingFileList, setIsLoadingFileList] = useState(true);
 
   const filterSearch = () => {
     setFilteredSearch(
-      allFilesData.filter(
+      filesList.filter(
         (item) =>
-          item.name.toLowerCase().includes(searchBarData.toLowerCase()) ||
-          item.fileType.toLowerCase().includes(searchBarData.toLowerCase()),
+          item?.name.toLowerCase().includes(searchBarData.toLowerCase()) ||
+          item?.type.toLowerCase().includes(searchBarData.toLowerCase()),
       ),
     );
   };
@@ -134,12 +70,27 @@ export default function Page() {
       return;
     }
     setIsShowingResultHeader(true);
+    setIsLoadingFileList(true);
     setSearchedQuery(searchBarData);
     filterSearch();
+    setIsLoadingFileList(false);
+  };
+
+  const formatSize = (size) => {
+    if (size > 1000000) {
+      //mb
+      return `${(size / 1000000).toFixed(2)} MB`;
+    } else if (size > 1000) {
+      //kb
+      return `${(size / 1000).toFixed(2)} KB`;
+    }
+
+    //b
+    return `${size} B`;
   };
 
   const resetSearch = () => {
-    setFilteredSearch(allFilesData);
+    setFilteredSearch(filesList);
     setIsShowingResultHeader(false);
     setSearchBarData('');
     setTimeout(() => setSearchedQuery(''), 500);
@@ -169,7 +120,6 @@ export default function Page() {
 
     try {
       //make axios req to send to backend
-      throw new Error();
       setDidUploadSucceed(true);
       handleClearFileInput();
     } catch (e) {
@@ -197,6 +147,28 @@ export default function Page() {
     }
   };
 
+  const handleGetFilesList = async () => {
+    setIsLoadingFileList(true);
+    try {
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files`,
+        {
+          withCredentials: true,
+          header: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
+      setFilesList(result.data);
+      setFilteredSearch(result.data);
+      console.log(result);
+    } catch (e) {
+      console.error(e);
+    }
+    setIsLoadingFileList(false);
+  };
+
   useEffect(() => {
     if (didUploadFail) {
       const timeoutId = setTimeout(() => {
@@ -216,6 +188,10 @@ export default function Page() {
       return () => clearTimeout(timeoutId);
     }
   }, [didUploadSucceed]);
+
+  useEffect(() => {
+    handleGetFilesList();
+  }, []);
 
   return (
     <div className={'min-h-screen flex flex-col bg-tertiary'}>
@@ -327,8 +303,15 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className={'h-full max-h-[650px] overflow-auto pt-8 lg:pt-0'}>
-            {filteredSearch.length !== 0 ? (
+          <div className={'h-[650px] overflow-auto pt-8 lg:pt-0'}>
+            {isLoadingFileList ? (
+              <div className={'h-full w-full flex justify-center items-center'}>
+                <AiOutlineLoading3Quarters
+                  className={'animate-spin text-tertiary'}
+                  size={200}
+                />
+              </div>
+            ) : filteredSearch.length !== 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow className={'h-16'}>
@@ -349,10 +332,10 @@ export default function Page() {
                     <TableRow key={index} className={'h-16'}>
                       <TableCell>{data.name}</TableCell>
                       <TableCell className={'text-center hidden md:table-cell'}>
-                        {data.fileType}
+                        {data.type}
                       </TableCell>
                       <TableCell className={'text-center hidden md:table-cell'}>
-                        {data.fileSize}
+                        {formatSize(data.size)}
                       </TableCell>
                       <TableCell className={'text-center'}>
                         <DropdownMenu>
@@ -377,7 +360,14 @@ export default function Page() {
                 </TableBody>
               </Table>
             ) : (
-              <div className={'w-full text-gray-400 py-8'}>No Results</div>
+              <div
+                className={
+                  'h-full w-full flex flex-col justify-center items-center gap-8'
+                }
+              >
+                <GrDocumentMissing className={''} size={100} />
+                <span className={'text-lg lg:text-2xl'}>No Files</span>
+              </div>
             )}
           </div>
         </div>
