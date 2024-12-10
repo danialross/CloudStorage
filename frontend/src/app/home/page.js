@@ -316,10 +316,10 @@ export default function Page() {
                 <TableHeader>
                   <TableRow className={'h-16'}>
                     <TableHead>Name</TableHead>
-                    <TableHead className={'text-center hidden md:table-cell'}>
+                    <TableHead className={'text-left hidden md:table-cell'}>
                       Type
                     </TableHead>
-                    <TableHead className={'text-center hidden md:table-cell'}>
+                    <TableHead className={'text-left hidden md:table-cell'}>
                       Size
                     </TableHead>
                     <TableHead className={'text-center'}>Action</TableHead>
@@ -331,10 +331,10 @@ export default function Page() {
                   {filteredSearch.map((data, index) => (
                     <TableRow key={index} className={'h-16'}>
                       <TableCell>{data.name}</TableCell>
-                      <TableCell className={'text-center hidden md:table-cell'}>
+                      <TableCell className={'text-left hidden md:table-cell'}>
                         {data.type}
                       </TableCell>
-                      <TableCell className={'text-center hidden md:table-cell'}>
+                      <TableCell className={'text-left hidden md:table-cell'}>
                         {formatSize(data.size)}
                       </TableCell>
                       <TableCell className={'text-center'}>
