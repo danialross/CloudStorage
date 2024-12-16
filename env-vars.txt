@@ -1,0 +1,21 @@
+These are the variables that the docker compose uses to start the containers
+Replace the variables in the {} to values you want to use
+
+# Frontend environment variables
+FRONTEND_PORT={FRONTEND_PORT} i.e 3000
+
+# for frontend container to access backend container through the docker network using service name
+BACKEND_URL= {BACKEND_URL} i.e http://backend-app:3000
+# for local client to access backend through expose port of the docker container
+NEXT_PUBLIC_BACKEND_URL={NEXT_PUBLIC_BACKEND_URL} i.e http://localhost:3000
+
+# Backend environment variables
+JWT_SECRET={JWT_SECRET} i.e @$%#RETFGDF??#^@{$^L":SNDJF (random string password)
+BACKEND_PORT=3000
+# URL of local client to access backend for cors whitelist
+FRONTEND_URL=http://localhost:8080
+
+# MongoDB environment variables
+MONGO_INITDB_ROOT_USERNAME={MONGO_INITDB_ROOT_USERNAME}
+MONGO_INITDB_ROOT_PASSWORD={MONGO_INITDB_ROOT_PASSWORD}
+MONGO_INITDB_DATABASE={MONGO_INITDB_DATABASE}
