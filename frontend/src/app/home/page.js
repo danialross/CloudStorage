@@ -40,7 +40,10 @@ import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
-  const FAILED_UPLOAD_MESSSAGE = 'Error Uploading File';
+  const [failedUploadError, setFailedUploadError] = useState(
+    'Error Uploading File',
+  );
+
   const [searchBarData, setSearchBarData] = useState('');
   const [searchedQuery, setSearchedQuery] = useState('');
   const [isShowingResultHeader, setIsShowingResultHeader] = useState(false);
@@ -106,9 +109,10 @@ export default function Page() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    setUploadedFile(null);
   };
 
-  const handleAddFile = () => {
+  const handleAddFile = async () => {
     if (!uploadedFile) {
       return;
     }
@@ -119,13 +123,46 @@ export default function Page() {
     formData.append('file', uploadedFile);
 
     try {
-      //make axios req to send to backend
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/upload`,
+        formData,
+        {
+          withCredentials: true,
+        },
+      );
       setDidUploadSucceed(true);
       handleClearFileInput();
     } catch (e) {
+      if (e.status === 413) {
+        setFailedUploadError('File too large, failed to upload');
+      } else {
+        setFailedUploadError('Error Uploading File');
+      }
       setDidUploadFail(true);
     }
     setIsUploading(false);
+  };
+
+  const handleActionThenRefresh = async (action) => {
+    try {
+      await action();
+      await handleGetFilesList();
+    } catch (e) {
+      console.error('action failed');
+    }
+  };
+
+  const handleDeleteFile = async (fileId) => {
+    try {
+      const result = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/${fileId}`,
+        {
+          withCredentials: true,
+        },
+      );
+    } catch (e) {
+      console.error('Unable to delete resource');
+    }
   };
 
   const handleLogout = async (e) => {
@@ -135,10 +172,6 @@ export default function Page() {
         {},
         {
           withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
         },
       );
       router.push(`/`);
@@ -154,15 +187,10 @@ export default function Page() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/files`,
         {
           withCredentials: true,
-          header: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
         },
       );
       setFilesList(result.data);
       setFilteredSearch(result.data);
-      console.log(result);
     } catch (e) {
       console.error(e);
     }
@@ -236,8 +264,8 @@ export default function Page() {
                     <DialogTitle>Add File</DialogTitle>
                   </DialogHeader>
                   <div className={'w-full flex flex-col items-center'}>
-                    <span className={'font-'}>Select A File To Upload</span>
-                    <div className="grid w-2/3 items-center gap-1.5 py-4">
+                    <span>Select A File To Upload</span>
+                    <div className="items-center gap-1.5 py-4">
                       <Label htmlFor="file" className={'hidden'}>
                         File
                       </Label>
@@ -246,36 +274,37 @@ export default function Page() {
                         type="file"
                         onChange={(e) => setUploadedFile(e.target.files[0])}
                         ref={fileInputRef}
-                        className={'text-center'}
                       />
                     </div>
-                    <div className={'relative w-full h-8 flex justify-center'}>
-                      {isUploading && 'Uploading...'}
-                      <IoCheckmarkCircleOutline
-                        size={30}
-                        className={`absolute top-0 left-1/2 -translate-x-20 transition-opacity duration-200 ease-in-out text-green-500 ${didUploadSucceed ? 'opacity-100' : 'opacity-0'}`}
-                      />
-                      <span
-                        className={`absolute top-0 left-1/2 -translate-x-12 transition-opacity duration-200 ease-in-out ${didUploadSucceed ? 'opacity-100' : 'opacity-0'}`}
+                    <div className={'relative w-full flex justify-center'}>
+                      <div
+                        className={`absolute top-0 left-1/2 -translate-x-1/2 transition-opacity duration-200 ease-in-out text-center ${isUploading ? 'opacity-100' : 'opacity-0'}`}
                       >
-                        {SUCCESS_UPLOAD_MESSSAGE}
-                      </span>
-                      <RxCrossCircled
-                        size={30}
-                        className={`absolute top-0 left-1/2 -translate-x-24 transition-opacity duration-200 ease-in-out text-red-500 ${didUploadFail ? 'opacity-100' : 'opacity-0'}`}
-                      />
-                      <span
-                        className={`absolute top-0 left-1/2 -translate-x-12 transition-opacity duration-200 ease-in-out ${didUploadFail ? 'opacity-100' : 'opacity-0'}`}
+                        Uploading...
+                      </div>
+                      <div
+                        className={`absolute top-0 left-1/2 -translate-x-1/2 transition-opacity duration-200 ease-in-out text-green-500 flex gap-2 ${didUploadSucceed ? 'opacity-100' : 'opacity-0'}`}
                       >
-                        {FAILED_UPLOAD_MESSSAGE}
-                      </span>
+                        <IoCheckmarkCircleOutline size={30} />
+                        <span>{SUCCESS_UPLOAD_MESSSAGE}</span>
+                      </div>
+                      <div
+                        className={`absolute top-0 left-1/2 -translate-x-1/2 transition-opacity duration-200 ease-in-out text-red-500 flex gap-2 ${didUploadFail ? 'opacity-100' : 'opacity-0'}`}
+                      >
+                        <RxCrossCircled size={30} />
+                        <span>{failedUploadError}</span>
+                      </div>
                     </div>
                   </div>
                   <div className={'flex justify-between'}>
                     <DialogClose asChild>
                       <Button>Close</Button>
                     </DialogClose>
-                    <Button variant={'outline'} onClick={handleAddFile}>
+                    <Button
+                      variant={'outline'}
+                      disabled={!uploadedFile}
+                      onClick={() => handleActionThenRefresh(handleAddFile)}
+                    >
                       Add
                     </Button>
                   </div>
@@ -328,10 +357,16 @@ export default function Page() {
                 <TableBody
                   className={'transition-opacity duration-200 ease-in-out'}
                 >
-                  {filteredSearch.map((data, index) => (
-                    <TableRow key={index} className={'h-16'}>
-                      <TableCell>{data.name}</TableCell>
-                      <TableCell className={'text-left hidden md:table-cell'}>
+                  {filteredSearch.map((data) => (
+                    <TableRow key={data._id} className={'h-16'}>
+                      <TableCell className={'max-w-[600px]'}>
+                        {data.name}
+                      </TableCell>
+                      <TableCell
+                        className={
+                          'max-w-[100px] text-left hidden md:table-cell'
+                        }
+                      >
                         {data.type}
                       </TableCell>
                       <TableCell className={'text-left hidden md:table-cell'}>
@@ -340,16 +375,20 @@ export default function Page() {
                       <TableCell className={'text-center'}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button
-                              variant={'outline'}
-                              onClick={() => console.log('clicked')}
-                            >
+                            <Button variant={'outline'}>
                               <BsThreeDots />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuItem>Download</DropdownMenuItem>
-                            <DropdownMenuItem className={'text-destructive'}>
+                            <DropdownMenuItem
+                              className={'text-destructive'}
+                              onClick={() =>
+                                handleActionThenRefresh(() =>
+                                  handleDeleteFile(data._id),
+                                )
+                              }
+                            >
                               Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>
