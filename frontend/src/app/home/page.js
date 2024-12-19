@@ -37,6 +37,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { saveAs } from 'file-saver';
 
 export default function Page() {
   const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
@@ -195,6 +196,26 @@ export default function Page() {
       console.error(e);
     }
     setIsLoadingFileList(false);
+  };
+
+  const handleDownloadFile = async (fileId) => {
+    try {
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/${fileId}`,
+        {
+          responseType: 'blob',
+          withCredentials: true,
+        },
+      );
+      const contentDisposition = result.headers['content-disposition'];
+      const filename = contentDisposition
+        .split('filename=')[1]
+        .replace(/"/g, '');
+
+      saveAs(result.data, filename);
+    } catch (e) {
+      console.error('Unable to download file');
+    }
   };
 
   useEffect(() => {
@@ -380,7 +401,11 @@ export default function Page() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
-                            <DropdownMenuItem>Download</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDownloadFile(data._id)}
+                            >
+                              Download
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               className={'text-destructive'}
                               onClick={() =>

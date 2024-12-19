@@ -9,6 +9,7 @@ async function bootstrap() {
     credentials: true,
     methods: ['GET', 'POST', 'DELETE'],
     origin: [process.env.FRONTEND_URL],
+    exposedHeaders: ['Content-Disposition'],
   });
   app.use(cookieParser());
   await app.listen(process.env.PORT || 3000);
