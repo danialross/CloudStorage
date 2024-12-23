@@ -5,7 +5,6 @@ import { FaMagnifyingGlass } from 'react-icons/fa6';
 import { RxCross2 } from 'react-icons/rx';
 import { FiPlus } from 'react-icons/fi';
 import { PiSignOutBold } from 'react-icons/pi';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { GrDocumentMissing } from 'react-icons/gr';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -38,6 +37,7 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { saveAs } from 'file-saver';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Page() {
   const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
@@ -57,6 +57,7 @@ export default function Page() {
   const fileInputRef = useRef(null);
   const router = useRouter();
   const [isLoadingFileList, setIsLoadingFileList] = useState(true);
+  const [IsLoadingLogout, setIsLoadingLogout] = useState(false);
 
   const filterSearch = () => {
     setFilteredSearch(
@@ -166,7 +167,8 @@ export default function Page() {
     }
   };
 
-  const handleLogout = async (e) => {
+  const handleLogout = async () => {
+    setIsLoadingLogout(true);
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`,
@@ -242,7 +244,11 @@ export default function Page() {
     handleGetFilesList();
   }, []);
 
-  return (
+  return IsLoadingLogout ? (
+    <div className={'w-screen h-screen flex justify-center items-center'}>
+      <LoadingSpinner />
+    </div>
+  ) : (
     <div className={'min-h-screen flex flex-col bg-tertiary'}>
       <div className={'flex justify-between items-center px-8 lg:px-16 pt-4'}>
         <div
@@ -355,12 +361,7 @@ export default function Page() {
           </div>
           <div className={'h-[650px] overflow-auto pt-8 lg:pt-0'}>
             {isLoadingFileList ? (
-              <div className={'h-full w-full flex justify-center items-center'}>
-                <AiOutlineLoading3Quarters
-                  className={'animate-spin text-tertiary'}
-                  size={200}
-                />
-              </div>
+              <LoadingSpinner />
             ) : filteredSearch.length !== 0 ? (
               <Table>
                 <TableHeader>

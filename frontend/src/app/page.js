@@ -7,6 +7,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Page() {
   const router = useRouter();
@@ -19,8 +20,10 @@ export default function Page() {
   } = useForm();
   const [isShowingPassword, setIsShowingPassword] = useState(false);
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
+  const [IsLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const body = getValues();
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, body, {
@@ -39,7 +42,11 @@ export default function Page() {
     }
   };
 
-  return (
+  return IsLoading ? (
+    <div className={'w-screen h-screen flex justify-center items-center'}>
+      <LoadingSpinner />
+    </div>
+  ) : (
     <div className="w-screen h-screen inline md:flex ">
       <div
         className={
