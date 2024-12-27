@@ -1,6 +1,5 @@
 'use client';
 import { FaMixcloud } from 'react-icons/fa';
-import { BsThreeDots } from 'react-icons/bs';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import { RxCross2 } from 'react-icons/rx';
 import { FiPlus } from 'react-icons/fi';
@@ -17,15 +16,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,6 +33,10 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { saveAs } from 'file-saver';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import process from 'next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss';
+import { DialogBody } from 'next/dist/client/components/react-dev-overlay/internal/components/Dialog';
+import { RiDeleteBin5Line } from 'react-icons/ri';
+import { IoMdDownload } from 'react-icons/io';
 
 export default function Page() {
   const SUCCESS_UPLOAD_MESSSAGE = 'Upload Successful';
@@ -47,6 +46,7 @@ export default function Page() {
 
   const [searchBarData, setSearchBarData] = useState('');
   const [searchedQuery, setSearchedQuery] = useState('');
+  const [selectedFileId, setSelectedFileId] = useState('');
   const [isShowingResultHeader, setIsShowingResultHeader] = useState(false);
   const [filesList, setFilesList] = useState([]);
   const [filteredSearch, setFilteredSearch] = useState(filesList);
@@ -58,6 +58,9 @@ export default function Page() {
   const router = useRouter();
   const [isLoadingFileList, setIsLoadingFileList] = useState(true);
   const [IsLoadingLogout, setIsLoadingLogout] = useState(false);
+  const [isConfirmDeleteModalShowing, setIsConfirmDeleteModalShowing] =
+    useState(false);
+  const dropdownMenuRef = useRef(null);
 
   const filterSearch = () => {
     setFilteredSearch(
@@ -156,7 +159,7 @@ export default function Page() {
 
   const handleDeleteFile = async (fileId) => {
     try {
-      const result = await axios.delete(
+      await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/${fileId}`,
         {
           withCredentials: true,
@@ -219,7 +222,6 @@ export default function Page() {
       console.error('Unable to download file');
     }
   };
-
   useEffect(() => {
     if (didUploadFail) {
       const timeoutId = setTimeout(() => {
@@ -245,7 +247,9 @@ export default function Page() {
   }, []);
 
   return IsLoadingLogout ? (
-    <div className={'w-screen h-screen flex justify-center items-center'}>
+    <div
+      className={'relative w-screen h-screen flex justify-center items-center'}
+    >
       <LoadingSpinner />
     </div>
   ) : (
@@ -332,7 +336,7 @@ export default function Page() {
                       disabled={!uploadedFile}
                       onClick={() => handleActionThenRefresh(handleAddFile)}
                     >
-                      Add
+                      <FiPlus />
                     </Button>
                   </div>
                 </DialogContent>
@@ -394,31 +398,67 @@ export default function Page() {
                       <TableCell className={'text-left hidden md:table-cell'}>
                         {formatSize(data.size)}
                       </TableCell>
-                      <TableCell className={'text-center'}>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant={'outline'}>
-                              <BsThreeDots />
+                      <TableCell className={'flex flex-col gap-4 items-center'}>
+                        <Button
+                          onClick={() => {
+                            handleDownloadFile(data._id);
+                          }}
+                          className={'max-w-32 w-full'}
+                          variant={'outline'}
+                        >
+                          <IoMdDownload />
+                        </Button>
+                        <Dialog
+                          open={isConfirmDeleteModalShowing}
+                          onOpenChange={setIsConfirmDeleteModalShowing}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant={'destructive'}
+                              className={'max-w-32  w-full'}
+                            >
+                              <RiDeleteBin5Line />
                             </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem
-                              onClick={() => handleDownloadFile(data._id)}
-                            >
-                              Download
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className={'text-destructive'}
-                              onClick={() =>
-                                handleActionThenRefresh(() =>
-                                  handleDeleteFile(data._id),
-                                )
-                              }
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                          </DialogTrigger>
+                          <DialogContent
+                            onOpenAutoFocus={(e) => e.preventDefault()}
+                          >
+                            <DialogHeader>
+                              <DialogTitle>Are you sure?</DialogTitle>
+                            </DialogHeader>
+                            <DialogBody>
+                              <DialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete the file from the server.
+                              </DialogDescription>
+                            </DialogBody>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button
+                                  variant={'outline'}
+                                  onClick={() =>
+                                    setIsConfirmDeleteModalShowing(false)
+                                  }
+                                >
+                                  Cancel
+                                </Button>
+                              </DialogClose>
+                              <DialogClose asChild>
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => {
+                                    handleActionThenRefresh(() =>
+                                      handleDeleteFile(selectedFileId),
+                                    );
+                                    setIsConfirmDeleteModalShowing(false);
+                                  }}
+                                >
+                                  Delete{' '}
+                                </Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   ))}
